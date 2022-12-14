@@ -41,7 +41,7 @@ public class MainFrame extends BasicFrame implements ActionListener {
         panel.add(logIn);
         panel.add(label);
 
-        System.out.print("Init finished");
+//        System.out.println("Init finished");
     }
 
     public boolean logIn(String userName, String pwd) {
@@ -52,10 +52,10 @@ public class MainFrame extends BasicFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.register) {
             frame.dispose();
-            new Register(frameX, frameY);
+            new LogIn(frameX, frameY, Type.REGISTER);
         } else if (e.getSource() == this.logIn) {
             frame.dispose();
-            new LogIn(frameX, frameY);
+            new LogIn(frameX, frameY, Type.LOGIN);
         }
     }
 }
