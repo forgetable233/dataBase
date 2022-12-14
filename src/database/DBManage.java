@@ -27,7 +27,7 @@ public class DBManage {
         DB = String.valueOf(_DB.toCharArray(), 0, _DB.length());
     }
 
-    boolean useLogin(String userName, String pwd) {
+    public boolean useLogin(String userName, String pwd) {
         Connection connection;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");

@@ -1,38 +1,61 @@
 package frame;
 
+import javax.swing.*;
 import java.awt.*;
-public class MainFrame {
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.lang.*;
+import java.util.Vector;
 
-    int mainFrameX;
+import database.DBManage;
 
-    int mainFrameY;
 
-    Frame mainFrame;
+public class MainFrame extends BasicFrame implements ActionListener {
+    JButton register = new JButton("注册");
+    JButton logIn = new JButton("登录");
 
-    public MainFrame(){
-        mainFrame = new Frame("main frame");
+    JLabel label = new JLabel();
+
+    public MainFrame() {
+        super();
     }
 
+    // 初始化各种参数
     public MainFrame(int x, int y) {
-        mainFrame = new Frame("main frame");
-        mainFrame.setSize(x, y);
-        mainFrame.setLocation(200, 200);
-//        mainFrame.setResizable(true);
-        mainFrame.setVisible(true);
-        mainFrameX = x;
-        mainFrameY = y;
-        InitButtons();
-        mainFrame.setLayout(null);
+        super(x, y);
+
+        // 定义按钮的位置
+        register.setLocation(80, 100);
+        register.setSize(90, 40);
+        register.addActionListener(this);
+        logIn.setLocation(230, 100);
+        logIn.setSize(90, 40);
+        logIn.addActionListener(this);
+
+        label.setText("土地流转");
+        label.setFont(new Font(null, Font.PLAIN, 25));
+        label.setLocation(140, 20);
+        label.setSize(120, 60);
+
+        panel.add(register);
+        panel.add(logIn);
+        panel.add(label);
+
         System.out.print("Init finished");
     }
 
-    private void InitButtons() {
-        Button register = new Button("注册");
-        Button logIn = new Button("登录");
-        register.setBounds(10, 10, 10, 10);
-        logIn.setBounds(20, 20, 10, 10);
-        mainFrame.add(register);
-        mainFrame.add(logIn);
-        System.out.print("button added\n");
+    public boolean logIn(String userName, String pwd) {
+        return false;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == this.register) {
+            frame.dispose();
+            new Register(frameX, frameY);
+        } else if (e.getSource() == this.logIn) {
+            frame.dispose();
+            new LogIn(frameX, frameY);
+        }
     }
 }
