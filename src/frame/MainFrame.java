@@ -3,6 +3,10 @@ package frame;
 import java.awt.*;
 public class MainFrame {
 
+    int mainFrameX;
+
+    int mainFrameY;
+
     Frame mainFrame;
 
     public MainFrame(){
@@ -10,19 +14,25 @@ public class MainFrame {
     }
 
     public MainFrame(int x, int y) {
-        new MainFrame();
         mainFrame = new Frame("main frame");
-        mainFrame.setSize(400, 400);
+        mainFrame.setSize(x, y);
         mainFrame.setLocation(200, 200);
-        mainFrame.setResizable(true);
+//        mainFrame.setResizable(true);
         mainFrame.setVisible(true);
+        mainFrameX = x;
+        mainFrameY = y;
+        InitButtons();
+        mainFrame.setLayout(null);
+        System.out.print("Init finished");
     }
 
-    public static void main(String[] args) {
-        Frame f = new Frame("test frame");
-        f.setSize(400, 400);
-        f.setLocation(200, 200);
-        f.setResizable(true);
-        f.setVisible(true);
+    private void InitButtons() {
+        Button register = new Button("注册");
+        Button logIn = new Button("登录");
+        register.setBounds(10, 10, 10, 10);
+        logIn.setBounds(20, 20, 10, 10);
+        mainFrame.add(register);
+        mainFrame.add(logIn);
+        System.out.print("button added\n");
     }
 }
