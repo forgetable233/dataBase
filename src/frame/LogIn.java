@@ -31,13 +31,14 @@ public class LogIn extends BasicFrame implements ActionListener {
         SetComponents();
     }
 
+    @Override
     void SetComponents() {
         _return.setLocation(80, 100);
-        _return.setSize(90, 40);
+        _return.setSize(Types.BUTTON_SIZE);
         _return.addActionListener(this);
 
         submit.setLocation(230, 100);
-        submit.setSize(90, 40);
+        submit.setSize(Types.BUTTON_SIZE);
         submit.addActionListener(this);
 
         userName.setEditable(true);
@@ -47,10 +48,24 @@ public class LogIn extends BasicFrame implements ActionListener {
         pwd.setLocation(140, 60);
         pwd.setSize(120, 30);
 
+        JLabel userNameText = new JLabel();
+        JLabel pwdText = new JLabel();
+
+        userNameText.setText("用户名：");
+        userNameText.setFont(Types.TEXT_STYLE);
+        userNameText.setLocation(40, 25);
+        userNameText.setSize(100, 20);
+        pwdText.setText("密码：");
+        pwdText.setFont(Types.TEXT_STYLE);
+        pwdText.setLocation(65, 65);
+        pwdText.setSize(80, 20);
+
         panel.add(_return);
         panel.add(submit);
         panel.add(userName);
         panel.add(pwd);
+        panel.add(userNameText);
+        panel.add(pwdText);
     }
 
     @Override
@@ -63,10 +78,12 @@ public class LogIn extends BasicFrame implements ActionListener {
             if (type == Type.LOGIN) {
                 System.out.println(userName);
                 System.out.println(pwd);
-                if (manage.useLogin(userName, pwd)) {
+                int uno = -1;
+                if ((uno = manage.useLogin(userName, pwd)) > 0) {
                     PrintInfo("登录成功", "登录成功");
+                    System.out.println(uno);
                     frame.dispose();
-                    new UserFrame(frameX, frameY);
+                    new UserFrame(frameX, frameY, uno);
                 } else {
                     PrintInfo("登录失败，用户名或密码错误", "错误信息");
                     frame.dispose();

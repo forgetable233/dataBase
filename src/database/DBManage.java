@@ -1,12 +1,6 @@
 package database;
 
-import javax.swing.*;
-import javax.xml.transform.Result;
 import java.sql.*;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.text.Format;
 
 public class DBManage {
     String url = "jdbc:mysql://localhost:3306/land?&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
@@ -15,8 +9,14 @@ public class DBManage {
 
     String pwd = "1234";
 
+    int uno = -1;
+
     public DBManage() {
 
+    }
+
+    public DBManage(int _uno) {
+        uno = _uno;
     }
 
     private Connection GetConnection() {
@@ -35,25 +35,34 @@ public class DBManage {
         return connection;
     }
 
-    public boolean useLogin(String userName, String pwd) {
+    public int useLogin(String userName, String pwd) {
         Connection connection = this.GetConnection();
         if (connection == null) {
             System.out.println("unable to connect the mysql database");
-            return false;
+            return -1;
         } else {
             System.out.println("connect succeed");
             try {
-                PreparedStatement get_pwd = connection.prepareStatement("SELECT PASSWORD FROM USER WHERE UNAME = ?;");
-                get_pwd.setString(1, userName);
-                ResultSet re = get_pwd.executeQuery();
+                PreparedStatement getPwd = connection.prepareStatement("SELECT PASSWORD FROM USER WHERE UNAME = ?;");
+                getPwd.setString(1, userName);
+                ResultSet re = getPwd.executeQuery();
                 System.out.println(re);
                 if (re.next()) {
-                    int get_re = re.getInt(1);
-                    int input_pwd = Integer.parseInt(pwd);
-                    return get_re == input_pwd;
+                    int dbPwd = re.getInt(1);
+                    int inputPwd = Integer.parseInt(pwd);
+                    if (dbPwd == inputPwd) {
+                        PreparedStatement getUNO = connection.prepareStatement("SELECT UNO FROM user WHERE UNAME = ?;");
+                        getUNO.setString(1, userName);
+                        ResultSet getRe = getUNO.executeQuery();
+                        getRe.next();
+                        return getRe.getInt(1);
+                    } else {
+
+                        return -1;
+                    }
                 } else {
                     System.out.println("re is null");
-                    return false;
+                    return -1;
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -81,4 +90,6 @@ public class DBManage {
             throw new RuntimeException(e);
         }
     }
+
+//    public int postLand()
 }

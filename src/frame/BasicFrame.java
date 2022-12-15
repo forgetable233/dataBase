@@ -3,7 +3,7 @@ package frame;
 import java.awt.*;
 import javax.swing.*;
 
-public class BasicFrame {
+public abstract class BasicFrame {
     int frameX;
     int frameY;
 
@@ -23,6 +23,8 @@ public class BasicFrame {
         frameY = y;
         InitFrame();
     }
+
+    abstract void SetComponents();
 
     private void InitFrame() {
         frame.setLayout(null);

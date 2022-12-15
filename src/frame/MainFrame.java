@@ -18,34 +18,39 @@ public class MainFrame extends BasicFrame implements ActionListener {
 
     public MainFrame() {
         super();
+        this.SetComponents();
     }
 
     // 初始化各种参数
     public MainFrame(int x, int y) {
         super(x, y);
 
-        // 定义按钮的位置
-        register.setLocation(80, 100);
-        register.setSize(90, 40);
-        register.addActionListener(this);
-        logIn.setLocation(230, 100);
-        logIn.setSize(90, 40);
-        logIn.addActionListener(this);
-
-        label.setText("土地流转");
-        label.setFont(new Font(null, Font.PLAIN, 25));
-        label.setLocation(140, 20);
-        label.setSize(120, 60);
-
-        panel.add(register);
-        panel.add(logIn);
-        panel.add(label);
-
+        this.SetComponents();
 //        System.out.println("Init finished");
     }
 
     public boolean logIn(String userName, String pwd) {
         return false;
+    }
+
+    @Override
+    void SetComponents() {
+        // 定义按钮的位置
+        register.setLocation(80, 100);
+        register.setSize(Types.BUTTON_SIZE);
+        register.addActionListener(this);
+        logIn.setLocation(230, 100);
+        logIn.setSize(Types.BUTTON_SIZE);
+        logIn.addActionListener(this);
+
+        label.setText("土地流转");
+        label.setFont(Types.TEXT_STYLE);
+        label.setLocation(140, 20);
+        label.setSize(Types.MAIN_LABEL_SIZE);
+
+        panel.add(register);
+        panel.add(logIn);
+        panel.add(label);
     }
 
     @Override

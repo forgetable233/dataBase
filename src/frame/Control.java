@@ -6,6 +6,7 @@ import javax.swing.*;
 public class Control {
     int default_x;
     int default_y;
+
     public Control() {
         default_x = 400;
         default_y = 200;
