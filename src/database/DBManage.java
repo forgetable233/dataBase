@@ -46,9 +46,9 @@ public class DBManage {
                 PreparedStatement get_pwd = connection.prepareStatement("SELECT PASSWORD FROM USER WHERE UNAME = ?;");
                 get_pwd.setString(1, userName);
                 ResultSet re = get_pwd.executeQuery();
-                if (!re.next()) {
+                System.out.println(re);
+                if (re.next()) {
                     int get_re = re.getInt(1);
-                    System.out.println("the password :" + get_re);
                     int input_pwd = Integer.parseInt(pwd);
                     return get_re == input_pwd;
                 } else {
@@ -64,17 +64,17 @@ public class DBManage {
     public boolean userRegister(String userName, String pwd) {
         Connection connection = this.GetConnection();
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM USER WHERE uno = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM USER WHERE uno = ?;");
             statement.setString(1, userName);
             ResultSet re = statement.executeQuery();
-            re.next();
-            if (!re.next()) {
+            if (re.next()) {
                 return false;
             } else {
-                PreparedStatement insert = connection.prepareStatement("INSERT INTO user VALUES (?, ?)");
+                PreparedStatement insert = connection.prepareStatement("INSERT INTO user (UNAME, PASSWORD) VALUES (?, ?);");
                 insert.setString(1, userName);
                 insert.setInt(2, Integer.parseInt(pwd));
-                insert.executeQuery();
+                System.out.println(insert);
+                insert.execute();
                 return true;
             }
         } catch (SQLException e) {

@@ -74,15 +74,14 @@ public class LogIn extends BasicFrame implements ActionListener {
                 }
             } else {
                 if (manage.userRegister(userName, pwd)) {
-                    PrintInfo("登录成功", "登录成功");
+                    PrintInfo("注册成功请重新登录", "注册成功");
                     frame.dispose();
-                    new LogIn(frameX, frameX, Type.LOGIN);
+                    new LogIn(frameX, frameY, Type.LOGIN);
                 } else {
                     PrintInfo("注册失败，用户名重复", "错误信息");
                     frame.dispose();
                     new MainFrame(frameX, frameY);
                 }
-
             }
         } else if (e.getSource() == _return) {
             frame.dispose();
@@ -92,7 +91,7 @@ public class LogIn extends BasicFrame implements ActionListener {
 
     void PrintInfo(String info, String title) {
         JLabel label = new JLabel();
-        int output = JOptionPane.showConfirmDialog(null, info, "错误信息", JOptionPane.YES_OPTION);
+        int output = JOptionPane.showConfirmDialog(null, info, "错误信息", JOptionPane.YES_NO_OPTION);
         if (output == JOptionPane.YES_OPTION) {
             label.setText("yes");
         }
