@@ -9,14 +9,10 @@ public class DBManage {
 
     String pwd = "1234";
 
-    int uno = -1;
+//    int uno = -1;
 
     public DBManage() {
 
-    }
-
-    public DBManage(int _uno) {
-        uno = _uno;
     }
 
     private Connection GetConnection() {
@@ -91,5 +87,30 @@ public class DBManage {
         }
     }
 
-//    public int postLand()
+    public int postLand(int uno, String LTYPE, String TTYPE, String location, int price) {
+        Connection connection = this.GetConnection();
+        try {
+            Statement getLandNum = connection.createStatement();
+            ResultSet numRe = getLandNum.executeQuery("SELECT COUNT(*) FROM land;");
+            numRe.next();
+            int LNO = numRe.getInt(1) + 1;
+
+            PreparedStatement insertLand =
+                    connection.prepareStatement("INSERT INTO land (LNO, UNO, LTYPE, TTYPE, LOCATION, PRICE) " +
+                            "VALUES (?, ?, ?, ?, ?, ?);");
+
+            insertLand.setInt(1, LNO);
+            insertLand.setInt(2, uno);
+            insertLand.setString(3, LTYPE);
+            insertLand.setString(4, TTYPE);
+            insertLand.setString(5, location);
+            insertLand.setInt(6, price);
+
+            insertLand.execute();
+            return LNO;
+        } catch (SQLException e) {
+            System.out.println(e.getErrorCode());
+            return -1;
+        }
+    }
 }

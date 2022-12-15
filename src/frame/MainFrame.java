@@ -44,7 +44,7 @@ public class MainFrame extends BasicFrame implements ActionListener {
         logIn.addActionListener(this);
 
         label.setText("土地流转");
-        label.setFont(Types.TEXT_STYLE);
+        label.setFont(Types.MAIN_TEXT_STYLE);
         label.setLocation(140, 20);
         label.setSize(Types.MAIN_LABEL_SIZE);
 

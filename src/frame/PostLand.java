@@ -1,10 +1,12 @@
 package frame;
 
-import java.awt.*;
+import database.DBManage;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import javax.print.attribute.standard.PrinterInfo;
 import javax.swing.*;
 
 public class PostLand extends BasicFrame implements ActionListener, ItemListener {
@@ -35,7 +37,7 @@ public class PostLand extends BasicFrame implements ActionListener, ItemListener
     JComboBox<String> transType = new JComboBox<String>(allTransTypes);
 
     JComboBox<String> locationType = new JComboBox<String>(allLocations);
-    JTextField price = new JTextField();
+    JTextField priceText = new JTextField();
 
     int uno;
 
@@ -44,8 +46,9 @@ public class PostLand extends BasicFrame implements ActionListener, ItemListener
         this.SetComponents();
     }
 
-    public PostLand(int x, int y, int uno) {
+    public PostLand(int x, int y, int _uno) {
         super(x, y);
+        uno = _uno;
         this.SetComponents();
     }
 
@@ -66,47 +69,94 @@ public class PostLand extends BasicFrame implements ActionListener, ItemListener
         locationType.setSize(120, 30);
         locationType.addItemListener(this);
 
-        price.setEditable(true);
-        price.setLocation(140, 205);
-        price.setSize(120, 30);
+        priceText.setEditable(true);
+        priceText.setLocation(140, 205);
+        priceText.setSize(120, 30);
 
         _return.setLocation(80, 250);
         _return.setSize(Types.BUTTON_SIZE);
+        _return.addActionListener(this);
 
         submit.setLocation(230, 250);
         submit.setSize(Types.BUTTON_SIZE);
+        submit.addActionListener(this);
+
         JLabel landLabel = new JLabel();
         JLabel transLabel = new JLabel();
         JLabel locationLabel = new JLabel();
+        JLabel priceLabel = new JLabel();
 
+        landLabel.setText("土地类型");
+        landLabel.setFont(Types.TEXT_STYLE);
+        landLabel.setLocation(30, 60);
+        landLabel.setSize(Types.SMALL_LABEL_SIZE);
+
+        transLabel.setText("流转类型");
+        transLabel.setFont(Types.TEXT_STYLE);
+        transLabel.setLocation(30, 110);
+        transLabel.setSize(Types.SMALL_LABEL_SIZE);
+
+        locationLabel.setText("土地位置");
+        locationLabel.setFont(Types.TEXT_STYLE);
+        locationLabel.setLocation(30, 160);
+        locationLabel.setSize(Types.SMALL_LABEL_SIZE);
+
+        priceLabel.setText("流转价格");
+        priceLabel.setFont(Types.TEXT_STYLE);
+        priceLabel.setLocation(30, 210);
+        priceLabel.setSize(Types.SMALL_LABEL_SIZE);
 
         panel.add(landType);
         panel.add(transType);
         panel.add(locationType);
-        panel.add(price);
+        panel.add(priceText);
         panel.add(_return);
         panel.add(submit);
+        panel.add(landLabel);
+        panel.add(transLabel);
+        panel.add(locationLabel);
+        panel.add(priceLabel);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if (e.getSource() == _return) {
+            frame.dispose();
+            new UserFrame(400, 200, uno);
+        } else if (e.getSource() == submit) {
+            DBManage manage = new DBManage();
+            String tarLandType = (String) landType.getSelectedItem();
+            String tarTransType = (String) transType.getSelectedItem();
+            String tarLocationType = (String) locationType.getSelectedItem();
+            int price;
+            try{
+                price = Integer.parseInt(priceText.getText());
+            } catch (NumberFormatException exception) {
+                System.out.println(exception.getMessage());
+                return;
+            }
+            System.out.println(uno);
+            int lno = manage.postLand(uno, tarLandType, tarTransType, tarLocationType, price);
+            if (lno > 0) {
+                PrintInfo("发布成功", "发布结果");
+                frame.dispose();
+                new UserFrame(400, 200, uno);
+            } else {
+                PrintInfo("发布失败", "发布结果");
+            }
+        }
     }
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        if (e.getSource() == landType) {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
 
-            }
-        } else if (e.getSource() == transType) {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
+    }
 
-            }
-        } else if (e.getSource() == locationType) {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-
-            }
+    void PrintInfo(String info, String title) {
+        JLabel label = new JLabel();
+        int output = JOptionPane.showConfirmDialog(null, info, title, JOptionPane.YES_NO_OPTION);
+        if (output == JOptionPane.YES_OPTION) {
+            label.setText("yes");
         }
     }
 }

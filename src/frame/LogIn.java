@@ -54,7 +54,7 @@ public class LogIn extends BasicFrame implements ActionListener {
         userNameText.setText("用户名：");
         userNameText.setFont(Types.TEXT_STYLE);
         userNameText.setLocation(40, 25);
-        userNameText.setSize(100, 20);
+        userNameText.setSize(Types.SMALL_LABEL_SIZE);
         pwdText.setText("密码：");
         pwdText.setFont(Types.TEXT_STYLE);
         pwdText.setLocation(65, 65);
@@ -81,7 +81,6 @@ public class LogIn extends BasicFrame implements ActionListener {
                 int uno = -1;
                 if ((uno = manage.useLogin(userName, pwd)) > 0) {
                     PrintInfo("登录成功", "登录成功");
-                    System.out.println(uno);
                     frame.dispose();
                     new UserFrame(frameX, frameY, uno);
                 } else {
@@ -108,7 +107,7 @@ public class LogIn extends BasicFrame implements ActionListener {
 
     void PrintInfo(String info, String title) {
         JLabel label = new JLabel();
-        int output = JOptionPane.showConfirmDialog(null, info, "错误信息", JOptionPane.YES_NO_OPTION);
+        int output = JOptionPane.showConfirmDialog(null, info, title, JOptionPane.YES_NO_OPTION);
         if (output == JOptionPane.YES_OPTION) {
             label.setText("yes");
         }
