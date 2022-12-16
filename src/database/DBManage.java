@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.*;
+import java.util.Vector;
 
 public class DBManage {
     String url = "jdbc:mysql://localhost:3306/land?&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
@@ -111,6 +112,35 @@ public class DBManage {
         } catch (SQLException e) {
             System.out.println(e.getErrorCode());
             return -1;
+        }
+    }
+
+    public void getMyPost(int uno, Vector<String> LTypes, Vector<String> TTypes, Vector<Integer> applyNum, Vector<Integer> prices, Vector<Integer> LNOs) {
+        Connection connection = this.GetConnection();
+        try {
+            PreparedStatement getAllLands = connection.prepareStatement("SELECT LNO, LTYPE, TTYPE, PRICE FROM land WHERE UNO = ?;");
+            getAllLands.setInt(1, uno);
+            ResultSet landInfo = getAllLands.executeQuery();
+            int sum = 0;
+            while (landInfo.next()) {
+                sum++;
+                int lno = landInfo.getInt(1);
+                int price = landInfo.getInt(4);
+                String lType = landInfo.getString(2);
+                String tType = landInfo.getString(3);
+                PreparedStatement getAllApplies = connection.prepareStatement("SELECT COUNT(*) FROM apply WHERE LNO = ?;");
+                getAllApplies.setInt(1, lno);
+                ResultSet tempApplyNum = getAllApplies.executeQuery();
+                tempApplyNum.next();
+                int num = tempApplyNum.getInt(1);
+                applyNum.addElement(num);
+                prices.addElement(price);
+                LTypes.addElement(lType);
+                TTypes.addElement(tType);
+                LNOs.addElement(lno);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getErrorCode());
         }
     }
 }

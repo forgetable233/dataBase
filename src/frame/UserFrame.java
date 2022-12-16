@@ -9,6 +9,12 @@ public class UserFrame extends BasicFrame implements ActionListener {
 
     JButton selectLand = new JButton("查找土地");
 
+    JButton myPost = new JButton("我的发布");
+
+    JButton myApply = new JButton("我的申请");
+
+    JButton receiveApplies = new JButton("收到申请");
+
     JLabel label = new JLabel();
 
     int uno = -1;
@@ -26,22 +32,37 @@ public class UserFrame extends BasicFrame implements ActionListener {
 
     @Override
     void SetComponents() {
-        postLand.setLocation(80, 100);
+        postLand.setLocation(80, 110);
         postLand.setSize(Types.BUTTON_SIZE);
         postLand.addActionListener(this);
 
-        selectLand.setLocation(230, 100);
+        selectLand.setLocation(230, 110);
         selectLand.setSize(Types.BUTTON_SIZE);
         selectLand.addActionListener(this);
 
+        myPost.setLocation(80, 180);
+        myPost.setSize(Types.BUTTON_SIZE);
+        myPost.addActionListener(this);
+
+        myApply.setLocation(230, 180);
+        myApply.setSize(Types.BUTTON_SIZE);
+        myApply.addActionListener(this);
+
+        receiveApplies.setLocation(155, 240);
+        receiveApplies.setSize(Types.BUTTON_SIZE);
+        receiveApplies.addActionListener(this);
+
         label.setText("欢迎使用");
         label.setFont(Types.TEXT_STYLE);
-        label.setLocation(140, 20);
+        label.setLocation(150, 20);
         label.setSize(Types.MAIN_LABEL_SIZE);
 
         panel.add(postLand);
         panel.add(selectLand);
         panel.add(label);
+        panel.add(myApply);
+        panel.add(myPost);
+        panel.add(receiveApplies);
     }
 
     @Override
@@ -49,6 +70,16 @@ public class UserFrame extends BasicFrame implements ActionListener {
         if (e.getSource() == postLand) {
             frame.dispose();
             new PostLand(400, 350, uno);
+        } else if (e.getSource() == selectLand) {
+            frame.dispose();
+//            new SelectLand();
+        } else if (e.getSource() == myPost) {
+            frame.dispose();
+            new MyPost(400, 350, uno);
+        } else if (e.getSource() == myApply) {
+
+        } else if (e.getSource() == receiveApplies) {
+
         }
     }
 }
