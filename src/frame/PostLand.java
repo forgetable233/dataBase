@@ -160,7 +160,7 @@ public class PostLand extends BasicFrame implements ActionListener, ItemListener
         if (e.getSource() == _return) {
             if (!flag) {
                 frame.dispose();
-                new UserFrame(400, 200, uno);
+                new UserFrame(400, 350, uno);
             } else {
                 frame.dispose();
                 new MyPost(600, 337, uno);

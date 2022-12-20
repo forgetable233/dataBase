@@ -1,6 +1,7 @@
 package database;
 
 import frame.BasicFrame;
+import frame.ReceiveApply;
 
 import javax.print.attribute.standard.OrientationRequested;
 import java.security.cert.CertPath;
@@ -129,7 +130,26 @@ public class DBManage {
         try {
             PreparedStatement getAllLands = connection.prepareStatement("SELECT LNO, LTYPE, TTYPE, PRICE, LOCATION FROM land WHERE UNO = ?;");
             getAllLands.setInt(1, uno);
-            getLandInfo(LTypes, TTypes, locations, applyNum, prices, LNOs, UNOs, connection, getAllLands);
+            System.out.println("Enter get Land Info");
+            ResultSet re = getAllLands.executeQuery();
+            while (re.next()) {
+                int lno = re.getInt(1);
+                PreparedStatement getAllApplies = connection.prepareStatement("SELECT COUNT(*) FROM apply WHERE LNO = ?;");
+                getAllApplies.setInt(1, lno);
+                ResultSet tempApplyNum = getAllApplies.executeQuery();
+                tempApplyNum.next();
+                int num = tempApplyNum.getInt(1);
+
+
+                LNOs.addElement(re.getInt(1));
+                LTypes.addElement(re.getString(2));
+                TTypes.addElement(re.getString(3));
+                prices.addElement(re.getInt(4));
+                locations.addElement(re.getString(5));
+                applyNum.addElement(num);
+            }
+            System.out.println("Exit get land info");
+//            getLandInfo(LTypes, TTypes, locations, applyNum, prices, LNOs, UNOs, connection, getAllLands);
         } catch (SQLException e) {
             System.out.println(e.getErrorCode());
         }
@@ -187,6 +207,7 @@ public class DBManage {
                              Vector<Integer> UNOs,
                              Connection connection,
                              PreparedStatement getLands) throws SQLException {
+        System.out.println("Enter get Land Info");
         ResultSet re = getLands.executeQuery();
         while (re.next()) {
             int lno = re.getInt(1);
@@ -207,7 +228,9 @@ public class DBManage {
             locations.addElement(location);
             LNOs.addElement(lno);
             UNOs.addElement(uno);
+            System.out.println("The size is " + LTypes.size());
         }
+        System.out.println("Exit get land info");
     }
 
     public void submitApply(int LNO, int UNO1, int UNO2) {
@@ -280,6 +303,46 @@ public class DBManage {
             withdraw.setInt(1, uno1);
             withdraw.setInt(2, lno);
             withdraw.execute();
+        } catch (SQLException e) {
+            System.out.println(e.getErrorCode());
+        }
+    }
+
+    public void getReceiveApplies(int uno,
+                                  Vector<String> LTypes,
+                                  Vector<String> TTypes,
+                                  Vector<String> locations,
+                                  Vector<String> userName,
+                                  Vector<Integer> prices,
+                                  Vector<Integer> LNOs,
+                                  Vector<Integer> UNOs){
+        Connection connection = this.GetConnection();
+        try {
+            PreparedStatement getInfo = connection.prepareStatement("SELECT * FROM APPLY, land, user WHERE land.LNO = APPLY.LNO AND APPLICANT_UNO = user.UNO AND land.LNO = ?;");
+            getInfo.setInt(1, uno);
+            ResultSet re = getInfo.executeQuery();
+            while (re.next()) {
+                LNOs.addElement(re.getInt(1));
+                LTypes.addElement(re.getString(6));
+                TTypes.addElement(re.getString(7));
+                locations.addElement(re.getString(8));
+                prices.addElement(re.getInt(9));
+                userName.addElement(re.getString(11));
+                UNOs.addElement(re.getInt(10));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getErrorCode());
+        }
+    }
+
+    public void changeState(int uno, int lno, String state) {
+        Connection connection = this.GetConnection();
+        try {
+            PreparedStatement update = connection.prepareStatement("UPDATE apply SET STATE = ? WHERE APPLICANT_UNO = ? AND LNO = ?");
+            update.setString(1, state);
+            update.setInt(2, uno);
+            update.setInt(3, lno);
+            update.execute();
         } catch (SQLException e) {
             System.out.println(e.getErrorCode());
         }

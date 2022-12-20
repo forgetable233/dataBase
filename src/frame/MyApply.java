@@ -119,8 +119,6 @@ public class MyApply implements ActionListener {
                     new MyApply(600, 337, uno);
                 }
             }
-
-
         });
         withdraw.setBounds(438, 8, 63, 23);
 

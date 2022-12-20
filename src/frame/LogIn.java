@@ -82,6 +82,7 @@ public class LogIn extends BasicFrame implements ActionListener {
                 if ((uno = manage.useLogin(userName, pwd)) > 0) {
                     PrintInfo("登录成功", "登录成功");
                     frame.dispose();
+                    System.out.println("The uno is " + uno);
                     new UserFrame(frameX, 350, uno);
                 } else {
                     PrintInfo("登录失败，用户名或密码错误", "错误信息");
