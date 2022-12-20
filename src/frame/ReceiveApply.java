@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 
 public class ReceiveApply extends BasicFrame implements ActionListener {
     int uno;
-
     public ReceiveApply() {
         super();
         this.SetComponents();

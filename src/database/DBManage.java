@@ -14,8 +14,6 @@ public class DBManage {
 
     String pwd = "1234";
 
-//    int uno = -1;
-
     public DBManage() {
 
     }
@@ -125,32 +123,13 @@ public class DBManage {
                           Vector<String> locations,
                           Vector<Integer> applyNum,
                           Vector<Integer> prices,
-                          Vector<Integer> LNOs) {
+                          Vector<Integer> LNOs,
+                          Vector<Integer> UNOs) {
         Connection connection = this.GetConnection();
         try {
             PreparedStatement getAllLands = connection.prepareStatement("SELECT LNO, LTYPE, TTYPE, PRICE, LOCATION FROM land WHERE UNO = ?;");
             getAllLands.setInt(1, uno);
-            ResultSet landInfo = getAllLands.executeQuery();
-            int sum = 0;
-            while (landInfo.next()) {
-                sum++;
-                int lno = landInfo.getInt(1);
-                int price = landInfo.getInt(4);
-                String lType = landInfo.getString(2);
-                String tType = landInfo.getString(3);
-                String location = landInfo.getString(5);
-                PreparedStatement getAllApplies = connection.prepareStatement("SELECT COUNT(*) FROM apply WHERE LNO = ?;");
-                getAllApplies.setInt(1, lno);
-                ResultSet tempApplyNum = getAllApplies.executeQuery();
-                tempApplyNum.next();
-                int num = tempApplyNum.getInt(1);
-                applyNum.addElement(num);
-                prices.addElement(price);
-                LTypes.addElement(lType);
-                TTypes.addElement(tType);
-                locations.addElement(location);
-                LNOs.addElement(lno);
-            }
+            getLandInfo(LTypes, TTypes, locations, applyNum, prices, LNOs, UNOs, connection, getAllLands);
         } catch (SQLException e) {
             System.out.println(e.getErrorCode());
         }
@@ -178,6 +157,90 @@ public class DBManage {
             changeLand.setInt(4, price);
             changeLand.setInt(5, LNO);
             changeLand.execute();
+        } catch (SQLException e) {
+            System.out.println(e.getErrorCode());
+        }
+    }
+
+    public void getAllLands(Vector<String> LTypes,
+                            Vector<String> TTypes,
+                            Vector<String> locations,
+                            Vector<Integer> applyNum,
+                            Vector<Integer> prices,
+                            Vector<Integer> LNOs,
+                            Vector<Integer> UNOs) {
+        Connection connection = this.GetConnection();
+        try {
+            PreparedStatement getLands = connection.prepareStatement("SELECT * FROM land;");
+            getLandInfo(LTypes, TTypes, locations, applyNum, prices, LNOs, UNOs, connection, getLands);
+        } catch (SQLException e) {
+            System.out.println(e.getErrorCode());
+        }
+    }
+
+    private void getLandInfo(Vector<String> LTypes,
+                             Vector<String> TTypes,
+                             Vector<String> locations,
+                             Vector<Integer> applyNum,
+                             Vector<Integer> prices,
+                             Vector<Integer> LNOs,
+                             Vector<Integer> UNOs,
+                             Connection connection,
+                             PreparedStatement getLands) throws SQLException {
+        ResultSet re = getLands.executeQuery();
+        while (re.next()) {
+            int lno = re.getInt(1);
+            int price = re.getInt(6);
+            int uno = re.getInt(2);
+            String lType = re.getString(3);
+            String tType = re.getString(4);
+            String location = re.getString(5);
+            PreparedStatement getAllApplies = connection.prepareStatement("SELECT COUNT(*) FROM apply WHERE LNO = ?;");
+            getAllApplies.setInt(1, lno);
+            ResultSet tempApplyNum = getAllApplies.executeQuery();
+            tempApplyNum.next();
+            int num = tempApplyNum.getInt(1);
+            applyNum.addElement(num);
+            prices.addElement(price);
+            LTypes.addElement(lType);
+            TTypes.addElement(tType);
+            locations.addElement(location);
+            LNOs.addElement(lno);
+            UNOs.addElement(uno);
+        }
+    }
+
+    public void submitApply(int LNO, int UNO1, int UNO2) {
+        Connection connection = this.GetConnection();
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE APPLY SET STATE = '通过' WHERE LNO = ? AND APPLICANT_UNO = ? AND UNO = ?;");
+            statement.setInt(1, LNO);
+            statement.setInt(2, UNO1);
+            statement.setInt(3, UNO2);
+            statement.execute();
+        } catch (SQLException e) {
+            System.out.println(e.getErrorCode());
+        }
+    }
+
+    public void getTarLands(String tarLand,
+                            String tarTrans,
+                            String tarLocation,
+                            Vector<String> LTypes,
+                            Vector<String> TTypes,
+                            Vector<String> locations,
+                            Vector<Integer> applyNum,
+                            Vector<Integer> prices,
+                            Vector<Integer> LNOs,
+                            Vector<Integer> UNOs) {
+        Connection connection = this.GetConnection();
+        try {
+            PreparedStatement getLands = connection.prepareStatement("SELECT * FROM land WHERE LTYPE = ? AND TTYPE = ? AND LOCATION = ?;");
+            getLands.setString(1, tarLand);
+            getLands.setString(2, tarTrans);
+            getLands.setString(3, tarLocation);
+            getLandInfo(LTypes, TTypes, locations, applyNum, prices, LNOs, UNOs, connection, getLands);
+            System.out.println(LNOs.size());
         } catch (SQLException e) {
             System.out.println(e.getErrorCode());
         }

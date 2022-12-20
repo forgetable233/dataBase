@@ -182,7 +182,7 @@ public class PostLand extends BasicFrame implements ActionListener, ItemListener
                 if (lno > 0) {
                     PrintInfo("发布成功", "发布结果");
                     frame.dispose();
-                    new UserFrame(400, 200, uno);
+                    new UserFrame(400, 350, uno);
                 } else {
                     PrintInfo("发布失败", "发布结果");
                 }

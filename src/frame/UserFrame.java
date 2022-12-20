@@ -15,6 +15,8 @@ public class UserFrame extends BasicFrame implements ActionListener {
 
     JButton receiveApplies = new JButton("收到申请");
 
+    JButton returnMain = new JButton("退出登录");
+
     JLabel label = new JLabel();
 
     int uno = -1;
@@ -48,9 +50,13 @@ public class UserFrame extends BasicFrame implements ActionListener {
         myApply.setSize(Types.BUTTON_SIZE);
         myApply.addActionListener(this);
 
-        receiveApplies.setLocation(155, 240);
+        receiveApplies.setLocation(80, 240);
         receiveApplies.setSize(Types.BUTTON_SIZE);
         receiveApplies.addActionListener(this);
+
+        returnMain.setLocation(230, 240);
+        returnMain.setSize(Types.BUTTON_SIZE);
+        returnMain.addActionListener(this);
 
         label.setText("欢迎使用");
         label.setFont(Types.TEXT_STYLE);
@@ -63,6 +69,7 @@ public class UserFrame extends BasicFrame implements ActionListener {
         panel.add(myApply);
         panel.add(myPost);
         panel.add(receiveApplies);
+        panel.add(returnMain);
     }
 
     @Override
@@ -72,7 +79,7 @@ public class UserFrame extends BasicFrame implements ActionListener {
             new PostLand(400, 350, uno);
         } else if (e.getSource() == selectLand) {
             frame.dispose();
-//            new SelectLand();
+            new SelectLand(600, 337, uno);
         } else if (e.getSource() == myPost) {
             frame.dispose();
             new MyPost(600, 337, uno);
@@ -80,6 +87,9 @@ public class UserFrame extends BasicFrame implements ActionListener {
 
         } else if (e.getSource() == receiveApplies) {
 
+        } else if (e.getSource() == returnMain) {
+            frame.dispose();
+            new MainFrame(400, 200);
         }
     }
 }

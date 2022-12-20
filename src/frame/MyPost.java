@@ -31,6 +31,8 @@ public class MyPost implements ActionListener {
 
     Vector<Integer> LNOs = new Vector<Integer>();
 
+    Vector<Integer> UNOs = new Vector<>();
+
     JPanel mainPanel = new JPanel();
 
     public MyPost() {
@@ -49,7 +51,7 @@ public class MyPost implements ActionListener {
 
     private void GetAllMyPosts() {
         DBManage manage = new DBManage();
-        manage.getMyPost(uno, LTypes, TTypes, locations, applyNum, prices, LNOs);
+        manage.getMyPost(uno, LTypes, TTypes, locations, applyNum, prices, LNOs, UNOs);
         System.out.println("finish get my post");
     }
 
