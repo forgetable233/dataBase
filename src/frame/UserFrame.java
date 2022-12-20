@@ -75,7 +75,7 @@ public class UserFrame extends BasicFrame implements ActionListener {
 //            new SelectLand();
         } else if (e.getSource() == myPost) {
             frame.dispose();
-            new MyPost(400, 350, uno);
+            new MyPost(600, 337, uno);
         } else if (e.getSource() == myApply) {
 
         } else if (e.getSource() == receiveApplies) {

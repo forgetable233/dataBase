@@ -26,7 +26,7 @@ public abstract class BasicFrame {
 
     abstract void SetComponents();
 
-    private void InitFrame() {
+    protected void InitFrame() {
         frame.setLayout(null);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

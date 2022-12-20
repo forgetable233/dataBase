@@ -1,5 +1,9 @@
 package database;
 
+import frame.BasicFrame;
+
+import javax.print.attribute.standard.OrientationRequested;
+import java.security.cert.CertPath;
 import java.sql.*;
 import java.util.Vector;
 
@@ -115,10 +119,16 @@ public class DBManage {
         }
     }
 
-    public void getMyPost(int uno, Vector<String> LTypes, Vector<String> TTypes, Vector<Integer> applyNum, Vector<Integer> prices, Vector<Integer> LNOs) {
+    public void getMyPost(int uno,
+                          Vector<String> LTypes,
+                          Vector<String> TTypes,
+                          Vector<String> locations,
+                          Vector<Integer> applyNum,
+                          Vector<Integer> prices,
+                          Vector<Integer> LNOs) {
         Connection connection = this.GetConnection();
         try {
-            PreparedStatement getAllLands = connection.prepareStatement("SELECT LNO, LTYPE, TTYPE, PRICE FROM land WHERE UNO = ?;");
+            PreparedStatement getAllLands = connection.prepareStatement("SELECT LNO, LTYPE, TTYPE, PRICE, LOCATION FROM land WHERE UNO = ?;");
             getAllLands.setInt(1, uno);
             ResultSet landInfo = getAllLands.executeQuery();
             int sum = 0;
@@ -128,6 +138,7 @@ public class DBManage {
                 int price = landInfo.getInt(4);
                 String lType = landInfo.getString(2);
                 String tType = landInfo.getString(3);
+                String location = landInfo.getString(5);
                 PreparedStatement getAllApplies = connection.prepareStatement("SELECT COUNT(*) FROM apply WHERE LNO = ?;");
                 getAllApplies.setInt(1, lno);
                 ResultSet tempApplyNum = getAllApplies.executeQuery();
@@ -137,8 +148,36 @@ public class DBManage {
                 prices.addElement(price);
                 LTypes.addElement(lType);
                 TTypes.addElement(tType);
+                locations.addElement(location);
                 LNOs.addElement(lno);
             }
+        } catch (SQLException e) {
+            System.out.println(e.getErrorCode());
+        }
+    }
+
+    public void deleteLand(int LNO) {
+        Connection connection = this.GetConnection();
+        try {
+            PreparedStatement deleteLandRec = connection.prepareStatement("DELETE FROM land WHERE LNO = ?;");
+            deleteLandRec.setInt(1, LNO);
+            deleteLandRec.execute();
+        } catch (SQLException e) {
+            System.out.println(e.getErrorCode());
+        }
+    }
+
+    public void changeLand(int LNO, String lType, String tType, String location, int price) {
+        Connection connection = this.GetConnection();
+        try {
+            PreparedStatement changeLand =
+                    connection.prepareStatement("UPDATE land SET LTYPE = ?, TTYPE = ?, LOCATION = ?, PRICE = ? WHERE LNO = ?;");
+            changeLand.setString(1, lType);
+            changeLand.setString(2, tType);
+            changeLand.setString(3, location);
+            changeLand.setInt(4, price);
+            changeLand.setInt(5, LNO);
+            changeLand.execute();
         } catch (SQLException e) {
             System.out.println(e.getErrorCode());
         }

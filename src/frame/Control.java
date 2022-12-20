@@ -10,7 +10,6 @@ public class Control {
     public Control() {
         default_x = 400;
         default_y = 200;
-//        MainFrame mainFrame = new MainFrame(default_x, default_y);
-        MyPost test = new MyPost(400, 350, 1);
+        MainFrame mainFrame = new MainFrame(default_x, default_y);
     }
 }
