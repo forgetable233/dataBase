@@ -213,10 +213,9 @@ public class DBManage {
     public void submitApply(int LNO, int UNO1, int UNO2) {
         Connection connection = this.GetConnection();
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE APPLY SET STATE = '通过' WHERE LNO = ? AND APPLICANT_UNO = ? AND UNO = ?;");
+            PreparedStatement statement = connection.prepareStatement("UPDATE APPLY SET STATE = '通过' WHERE LNO = ? AND APPLICANT_UNO = ?;");
             statement.setInt(1, LNO);
             statement.setInt(2, UNO1);
-            statement.setInt(3, UNO2);
             statement.execute();
         } catch (SQLException e) {
             System.out.println(e.getErrorCode());
@@ -241,6 +240,46 @@ public class DBManage {
             getLands.setString(3, tarLocation);
             getLandInfo(LTypes, TTypes, locations, applyNum, prices, LNOs, UNOs, connection, getLands);
             System.out.println(LNOs.size());
+        } catch (SQLException e) {
+            System.out.println(e.getErrorCode());
+        }
+    }
+
+    public void getMyApply(int uno,
+                           Vector<String> LTypes,
+                           Vector<String> TTypes,
+                           Vector<String> locations,
+                           Vector<String> state,
+                           Vector<Integer> prices,
+                           Vector<Integer> LNOs,
+                           Vector<Integer> UNOs) {
+        Connection connection = this.GetConnection();
+        try {
+            PreparedStatement getLands = connection.prepareStatement("SELECT * FROM APPLY, land WHERE APPLICANT_UNO = ? AND APPLY.LNO = land.LNO;");
+            getLands.setInt(1, uno);
+            ResultSet re = getLands.executeQuery();
+            while (re.next()) {
+                LNOs.addElement(re.getInt(1));
+                state.addElement(re.getString(3));
+                UNOs.addElement(re.getInt(4));
+                LTypes.addElement(re.getString(6));
+                TTypes.addElement(re.getString(7));
+                locations.addElement(re.getString(8));
+                prices.addElement(re.getInt(9));
+            }
+            System.out.println(LNOs.size());
+        } catch (SQLException e) {
+            System.out.println(e.getErrorCode());
+        }
+    }
+
+    public void withdrawApply(int uno1, int lno) {
+        Connection connection = this.GetConnection();
+        try {
+            PreparedStatement withdraw = connection.prepareStatement("DELETE FROM apply WHERE APPLICANT_UNO = ? AND LNO = ?;");
+            withdraw.setInt(1, uno1);
+            withdraw.setInt(2, lno);
+            withdraw.execute();
         } catch (SQLException e) {
             System.out.println(e.getErrorCode());
         }

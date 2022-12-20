@@ -62,7 +62,6 @@ public class SelectLand implements ActionListener {
     JComboBox<String> locationType = new JComboBox<>(allLocations);
 
     public SelectLand() {
-        super();
         this.SetComponents();
     }
 
