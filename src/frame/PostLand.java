@@ -171,6 +171,7 @@ public class PostLand extends BasicFrame implements ActionListener, ItemListener
             String tarTransType = (String) transType.getSelectedItem();
             String tarLocationType = (String) locationType.getSelectedItem();
             int price;
+            System.out.println(priceText.getText());
             try {
                 price = Integer.parseInt(priceText.getText());
             } catch (NumberFormatException exception) {

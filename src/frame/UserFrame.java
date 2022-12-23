@@ -91,7 +91,7 @@ public class UserFrame extends BasicFrame implements ActionListener {
             new ReceiveApply(600, 337, uno);
         } else if (e.getSource() == returnMain) {
             frame.dispose();
-            new MainFrame(400, 350);
+            new MainFrame(400, 200);
         }
     }
 }

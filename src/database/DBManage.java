@@ -95,14 +95,13 @@ public class DBManage {
         Connection connection = this.GetConnection();
         try {
             Statement getLandNum = connection.createStatement();
-            ResultSet numRe = getLandNum.executeQuery("SELECT COUNT(*) FROM land;");
+            ResultSet numRe = getLandNum.executeQuery("SELECT MAX(LNO) FROM land;");
             numRe.next();
             int LNO = numRe.getInt(1) + 1;
 
             PreparedStatement insertLand =
                     connection.prepareStatement("INSERT INTO land (LNO, UNO, LTYPE, TTYPE, LOCATION, PRICE) " +
                             "VALUES (?, ?, ?, ?, ?, ?);");
-
             insertLand.setInt(1, LNO);
             insertLand.setInt(2, uno);
             insertLand.setString(3, LTYPE);
@@ -114,6 +113,8 @@ public class DBManage {
             return LNO;
         } catch (SQLException e) {
             System.out.println(e.getErrorCode());
+            System.out.println(e.getSQLState());
+            System.out.println(e.getMessage());
             return -1;
         }
     }
@@ -236,7 +237,7 @@ public class DBManage {
     public void submitApply(int LNO, int UNO1, int UNO2) {
         Connection connection = this.GetConnection();
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE APPLY SET STATE = '通过' WHERE LNO = ? AND APPLICANT_UNO = ?;");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO apply (LNO, APPLICANT_UNO, STATE) VALUES (?, ?, '审核');");
             statement.setInt(1, LNO);
             statement.setInt(2, UNO1);
             statement.execute();
@@ -318,7 +319,7 @@ public class DBManage {
                                   Vector<Integer> UNOs){
         Connection connection = this.GetConnection();
         try {
-            PreparedStatement getInfo = connection.prepareStatement("SELECT * FROM APPLY, land, user WHERE land.LNO = APPLY.LNO AND APPLICANT_UNO = user.UNO AND land.LNO = ?;");
+            PreparedStatement getInfo = connection.prepareStatement("SELECT * FROM APPLY, land, user WHERE land.LNO = APPLY.LNO AND APPLICANT_UNO = user.UNO AND land.UNO = ? AND apply.STATE = '审核';");
             getInfo.setInt(1, uno);
             ResultSet re = getInfo.executeQuery();
             while (re.next()) {
@@ -343,6 +344,12 @@ public class DBManage {
             update.setInt(2, uno);
             update.setInt(3, lno);
             update.execute();
+            if (state.equals("通过")) {
+                PreparedStatement change = connection.prepareStatement("UPDATE apply SET STATE = '拒绝' WHERE LNO = ? AND APPLICANT_UNO <> ?;");
+                change.setInt(1, lno);
+                change.setInt(2, uno);
+                change.execute();
+            }
         } catch (SQLException e) {
             System.out.println(e.getErrorCode());
         }
