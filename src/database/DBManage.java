@@ -1,10 +1,5 @@
 package database;
 
-import frame.BasicFrame;
-import frame.ReceiveApply;
-
-import javax.print.attribute.standard.OrientationRequested;
-import java.security.cert.CertPath;
 import java.sql.*;
 import java.util.Vector;
 
@@ -46,7 +41,7 @@ public class DBManage {
                 PreparedStatement getPwd = connection.prepareStatement("SELECT PASSWORD FROM USER WHERE UNAME = ?;");
                 getPwd.setString(1, userName);
                 ResultSet re = getPwd.executeQuery();
-                System.out.println(re);
+//                System.out.println(re);
                 if (re.next()) {
                     int dbPwd = re.getInt(1);
                     int inputPwd = Integer.parseInt(pwd);
@@ -73,7 +68,7 @@ public class DBManage {
     public boolean userRegister(String userName, String pwd) {
         Connection connection = this.GetConnection();
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM USER WHERE uno = ?;");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM USER WHERE UNAME = ?;");
             statement.setString(1, userName);
             ResultSet re = statement.executeQuery();
             if (re.next()) {
@@ -82,7 +77,7 @@ public class DBManage {
                 PreparedStatement insert = connection.prepareStatement("INSERT INTO user (UNAME, PASSWORD) VALUES (?, ?);");
                 insert.setString(1, userName);
                 insert.setInt(2, Integer.parseInt(pwd));
-                System.out.println(insert);
+//                System.out.println(insert);
                 insert.execute();
                 return true;
             }
@@ -131,7 +126,7 @@ public class DBManage {
         try {
             PreparedStatement getAllLands = connection.prepareStatement("SELECT LNO, LTYPE, TTYPE, PRICE, LOCATION FROM land WHERE UNO = ?;");
             getAllLands.setInt(1, uno);
-            System.out.println("Enter get Land Info");
+//            System.out.println("Enter get Land Info");
             ResultSet re = getAllLands.executeQuery();
             while (re.next()) {
                 int lno = re.getInt(1);
@@ -140,8 +135,6 @@ public class DBManage {
                 ResultSet tempApplyNum = getAllApplies.executeQuery();
                 tempApplyNum.next();
                 int num = tempApplyNum.getInt(1);
-
-
                 LNOs.addElement(re.getInt(1));
                 LTypes.addElement(re.getString(2));
                 TTypes.addElement(re.getString(3));
@@ -149,7 +142,7 @@ public class DBManage {
                 locations.addElement(re.getString(5));
                 applyNum.addElement(num);
             }
-            System.out.println("Exit get land info");
+//            System.out.println("Exit get land info");
 //            getLandInfo(LTypes, TTypes, locations, applyNum, prices, LNOs, UNOs, connection, getAllLands);
         } catch (SQLException e) {
             System.out.println(e.getErrorCode());
@@ -189,10 +182,12 @@ public class DBManage {
                             Vector<Integer> applyNum,
                             Vector<Integer> prices,
                             Vector<Integer> LNOs,
-                            Vector<Integer> UNOs) {
+                            Vector<Integer> UNOs,
+                            int uno) {
         Connection connection = this.GetConnection();
         try {
-            PreparedStatement getLands = connection.prepareStatement("SELECT * FROM land;");
+            PreparedStatement getLands = connection.prepareStatement("SELECT * FROM land WHERE land.UNO != ?;");
+            getLands.setInt(1, uno);
             getLandInfo(LTypes, TTypes, locations, applyNum, prices, LNOs, UNOs, connection, getLands);
         } catch (SQLException e) {
             System.out.println(e.getErrorCode());
@@ -229,7 +224,7 @@ public class DBManage {
             locations.addElement(location);
             LNOs.addElement(lno);
             UNOs.addElement(uno);
-            System.out.println("The size is " + LTypes.size());
+//            System.out.println("The size is " + LTypes.size());
         }
         System.out.println("Exit get land info");
     }
@@ -339,17 +334,18 @@ public class DBManage {
     public void changeState(int uno, int lno, String state) {
         Connection connection = this.GetConnection();
         try {
+            if (state.equals("通过")) {
+                PreparedStatement change = connection.prepareStatement("CALL change_state(?, ?)");
+                change.setInt(1, uno);
+                change.setInt(2, lno);
+                change.execute();
+                return;
+            }
             PreparedStatement update = connection.prepareStatement("UPDATE apply SET STATE = ? WHERE APPLICANT_UNO = ? AND LNO = ?");
             update.setString(1, state);
             update.setInt(2, uno);
             update.setInt(3, lno);
             update.execute();
-            if (state.equals("通过")) {
-                PreparedStatement change = connection.prepareStatement("UPDATE apply SET STATE = '拒绝' WHERE LNO = ? AND APPLICANT_UNO <> ?;");
-                change.setInt(1, lno);
-                change.setInt(2, uno);
-                change.execute();
-            }
         } catch (SQLException e) {
             System.out.println(e.getErrorCode());
         }

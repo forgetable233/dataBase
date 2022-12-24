@@ -3,13 +3,9 @@ package frame;
 import database.DBManage;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicArrowButton;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Objects;
 import java.util.Vector;
 
 public class SelectLand implements ActionListener {
@@ -70,7 +66,7 @@ public class SelectLand implements ActionListener {
         frameY = y;
         uno = _uno;
         DBManage temp = new DBManage();
-        temp.getAllLands(LTypes, TTypes, locations, applyNum, prices, LNOs, UNOs);
+        temp.getAllLands(LTypes, TTypes, locations, applyNum, prices, LNOs, UNOs, uno);
         InitFrame();
         this.SetComponents();
     }
@@ -154,6 +150,8 @@ public class SelectLand implements ActionListener {
                     manage.submitApply(LNO, uno, UNO);
                     // TODO 不可重复申请以及申请自己的判断
                     JOptionPane.showMessageDialog(mainPanel, "申请成功", "系统提示", JOptionPane.WARNING_MESSAGE);
+                    frame.dispose();
+                    new SelectLand(600, 337, uno);
                 }
             }
 
